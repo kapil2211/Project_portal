@@ -1,6 +1,9 @@
 const express=require("express");
 const app=express();
+const User=require("C:/Users/subha/Desktop/Project_Portal/Project_portal/models/user.js");
 const mongoose=require("mongoose");
+const session=require("express-session");
+const mongodb=require("mongodb");
 
 let port=8080;
 
@@ -18,9 +21,34 @@ app.use(express.static("public"));
 app.use(express.static(path.join(__dirname,"public/css")));
 app.use(express.static(path.join(__dirname,"public/js")));
 
-const User=require("models/user.ejs");
+
 const passport=require("passport");
 const localStrategy=require("passport-local");
+
+const sessionOptions={
+    secret:"mysupersecretcode",
+    resave:false,
+    saveUninitialized:true,
+    cookie:{
+      expires:Date.now()*7*24*60*60*1000,
+      maxAge:7*24*60*60*1000,
+    }
+  };
+
+app.use(session(sessionOptions));
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use((req,res,next)=>{
+    res.locals.currUser=req.user;
+    console.log(res.locals.currUser);
+    next();
+});
 
 
 main()
@@ -41,23 +69,40 @@ app.get("/signup",(req,res)=>{
 app.post("/signup",async(req,res)=>{
    try{
     let{username,email,password}=req.body;
-    const newUser=new User({email,password});
+    const newUser=new User({email,username});
     const registeredUser=await User.register(newUser,password);
     req.login(registeredUser,(err)=>{
         if(err){
-            return nextTick(err);
+            return next(err);
         }
-        res.redirect("/home.ejs");
+        res.redirect("/home");
     });
    }catch(err){
     res.send("some error occured");
    }
 
 });
+app.get("/home",(req,res)=>{
+    res.render("home.ejs");
+});
 
 app.get("/login",(req,res)=>{
     res.render("users/login.ejs");
 });
+
+app.post("/login",passport.authenticate("local",{failureRedirect:"/login",failureFlash:true}),(req,res)=>{
+    res.redirect("/home");
+});
+
+app.get("/logout",(req,res,next)=>{
+    req.logout((err)=>{
+        if(err){
+            return next(err);
+        }
+        res.redirect("/home");
+    });
+});
+
 
 app.use((req,res)=>{
     console.log("request received");
