@@ -1,16 +1,17 @@
 const express=require("express");
 const app=express();
-const User=require("C:/Users/subha/Desktop/Project_Portal/Project_portal/models/user.js");
+const User=require("./models/user");
 const mongoose=require("mongoose");
 const session=require("express-session");
+const methodOverride = require('method-override');
 const mongodb=require("mongodb");
-
+const {data}=require("./data");
 let port=8080;
 
 app.set("view engine","ejs");
 const path=require("path");
 app.set("views",path.join(__dirname,"/views"));
-
+app.use(methodOverride('_method'));
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
@@ -18,8 +19,7 @@ const ejsMate=require("ejs-mate");
 app.engine("ejs",ejsMate);
 
 app.use(express.static("public"));
-app.use(express.static(path.join(__dirname,"public/css")));
-app.use(express.static(path.join(__dirname,"public/js")));
+app.use(express.static(path.join(__dirname,"public/")));
 
 
 const passport=require("passport");
@@ -46,7 +46,7 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next)=>{
     res.locals.currUser=req.user;
-    console.log(res.locals.currUser);
+   
     next();
 });
 
@@ -83,8 +83,70 @@ app.post("/signup",async(req,res)=>{
 
 });
 app.get("/home",(req,res)=>{
-    res.render("home.ejs");
+    const projects=data;
+    
+   
+    res.render("home.ejs",{projects});
 });
+app.post("/home",(req,res)=>{
+   
+let projects=data;
+   if((req.body.q)&&(req.body.q!="")){
+    let q="";
+     q=req.body.q;
+     projects= data.filter((project) => (
+        project.projectName.toLowerCase().includes(q.toLowerCase())
+    ))
+
+   }
+   if(req.body.filter){
+    
+    const filter=req.body.filter;
+   
+    if(filter.location){
+       let  filtered_location= projects.filter((project) => (
+            project.job_location.includes(filter.location)
+        ))
+        
+        projects=filtered_location;
+    }
+    if(filter.domain){
+        let  filtered_domain= projects.filter((project) => (
+            project.domain.includes(filter.domain)
+        ))
+        projects=filtered_domain;
+    }if(filter.duration){
+        if(filter.duration==1){
+           let  filtered_duration= projects.filter((project) => (
+                (project.duration==1)||(project.duration==2)
+            ))
+            projects=filtered_duration;
+        }
+       else if(filter.duration==3){
+       let filtered_duration= projects.filter((project) => (
+                (project.duration>2)&&(project.duration<5)
+            ))
+            projects=filtered_duration;
+        }
+       else if(filter.duration==4){
+        let filtered_duration= projects.filter((project) => (
+                (project.duration>3)&&(project.duration<7)
+            ))
+            projects=filtered_duration;
+        }
+        else{
+            let filtered_duration= projects.filter((project) => (
+                (project.duration>6)
+            ))
+            projects=filtered_duration;
+        }
+      
+    }
+   
+   }
+res.render("home.ejs",{projects})
+   
+})
 
 app.get("/login",(req,res)=>{
     res.render("users/login.ejs");
@@ -104,9 +166,7 @@ app.get("/logout",(req,res,next)=>{
 });
 
 
-app.use((req,res)=>{
-    console.log("request received");
-});
+
 
 app.listen(port,()=>{
     console.log(`app is listening on port ${port}`);

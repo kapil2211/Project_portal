@@ -1,0 +1,25 @@
+<%- layout("/layouts/boilerplate") %>
+<body>
+    <form class="d-flex" role="search" method="GET" action="/home/?_method=PATCH" >
+        <input style="width: 15rem;" name="q" class="form-control nav_search me-2 " type="search" placeholder="Search_Projects" aria-label="Search">
+        <button class="btn btn-outline-success " type="submit">Search</button>
+    </form>
+  <% if(projects[0]){ %> 
+    <% for(project of projects){ %>
+        <div class='project_container'>
+            <div class="post_title">
+              <div class="project_name"><h3><%= project.projectName %></h3></div>
+              <div class="site">On-Site|Hybrid</div>
+            </div>
+            <div class="post_info">
+              <div class="postedby"><h5>Posted By:</h5> <br /> <%=project.postedBy %></div>
+              <div class="req"><PersonIcon></PersonIcon><br /><%=project.requirements %></div>
+              <div class="button"> <Button>See Details</Button></div>
+            </div>
+          </div>
+          
+    <% } %>
+    <% }  else{ %>
+        <h4>No results found!!</h4>
+   <% } %>
+</body>
