@@ -5,9 +5,9 @@ const mongoose=require("mongoose");
 const session=require("express-session");
 const methodOverride = require('method-override');
 const mongodb=require("mongodb");
-const {data}=require("./data");
+const ExpressError=require("./ExpressError.js");
+const Project=require("./models/project");
 let port=8080;
-
 app.set("view engine","ejs");
 const path=require("path");
 app.set("views",path.join(__dirname,"/views"));
@@ -34,7 +34,11 @@ const sessionOptions={
       maxAge:7*24*60*60*1000,
     }
   };
-
+  function asyncWrap(fn){
+    return function(req,res,next){
+        fn(req,res,next).catch((err)=> next(err));
+        };
+    }
 app.use(session(sessionOptions));
 
 app.use(passport.initialize());
@@ -63,11 +67,11 @@ async function main() {
 
 
 app.get("/signup",(req,res)=>{
-    res.render("users/signup.ejs");
+   return res.render("users/signup.ejs");
 });
 
-app.post("/signup",async(req,res)=>{
-   try{
+app.post("/signup",asyncWrap,async(req,res)=>{
+   
     let{username,email,password}=req.body;
     const newUser=new User({email,username});
     const registeredUser=await User.register(newUser,password);
@@ -75,34 +79,42 @@ app.post("/signup",async(req,res)=>{
         if(err){
             return next(err);
         }
-        res.redirect("/home");
+        return  res.redirect("/home");
     });
-   }catch(err){
-    res.send("some error occured");
-   }
+  
+});
+app.get("/home",asyncWrap(async (req,res)=>{
+    const projects=await Project.find();
+    return res.render("projects.ejs",{projects});
+}));
+app.post("home",asyncWrap(async (req,res)=>{
+    console.log(req.body);
+    const projects=await Project.find();
+    return res.render("projects.ejs",{projects});
+}));
+app.get("/projects",asyncWrap(async (req,res)=>{
+    const projects=await Project.find();
+    return res.render("projects.ejs",{projects});
+}));
+app.post("/projects",asyncWrap(async (req,res)=>{
+ 
+  console.log(req.body);
+   let filter;
+let projects= await Project.find();
 
-});
-app.get("/home",(req,res)=>{
-    const projects=data;
-    
-   
-    res.render("home.ejs",{projects});
-});
-app.post("/home",(req,res)=>{
-   
-let projects=data;
+let q="";
    if((req.body.q)&&(req.body.q!="")){
-    let q="";
+    
      q=req.body.q;
-     projects= data.filter((project) => (
+     projects= projects.filter((project) => (
         project.projectName.toLowerCase().includes(q.toLowerCase())
     ))
 
    }
    if(req.body.filter){
     
-    const filter=req.body.filter;
-   
+     filter=req.body.filter;
+  
     if(filter.location){
        let  filtered_location= projects.filter((project) => (
             project.job_location.includes(filter.location)
@@ -144,13 +156,15 @@ let projects=data;
     }
    
    }
-res.render("home.ejs",{projects})
+   return res.render("projects.ejs",{projects:projects,filters:filter})
    
-})
-
-app.get("/login",(req,res)=>{
+}))
+app.get("/projects/new",asyncWrap((req,res)=>{
+    return res.render("new.ejs");
+}))
+app.get("/login",asyncWrap((req,res)=>{
     res.render("users/login.ejs");
-});
+}));
 
 app.post("/login",passport.authenticate("local",{failureRedirect:"/login",failureFlash:true}),(req,res)=>{
     res.redirect("/home");
@@ -164,9 +178,14 @@ app.get("/logout",(req,res,next)=>{
         res.redirect("/home");
     });
 });
+app.all("*",(req,res,next)=>{
+    next(new ExpressError(404,"Page Not Found!"));
+   })
 
-
-
+app.use((err,req,res,next)=>{
+    let {status=501,message="some error occured"}= err;
+    res.render("error.ejs",{message})
+    } );
 
 app.listen(port,()=>{
     console.log(`app is listening on port ${port}`);

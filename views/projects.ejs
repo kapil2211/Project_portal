@@ -1,0 +1,84 @@
+<%- layout("/layouts/boilerplate") %>
+<body>
+ <div class="main-container">
+   <div class="filter">
+    <form method="post" action="/projects" >
+      <div class="heading">
+        <h3 style="display: inline-block; margin-right: 1.5rem;">FILTERS</h3>
+    <button class="btn btn-sm btn-outline-dark " style="margin-bottom: 0.3rem;text-align: center;font-size: x-small;">Apply</button>
+    
+      </div>
+    <br>
+    <div class="location">
+      <h5>Job Location</h5>
+      <br>
+      <label for="onsite">On-Site</label>
+      <input type="radio" name="filter[location]" id="onsite" value="on-site" class="filters" onclick="check(filter)">
+      <br>
+      <label for="hybrid">Hybrid</label>
+      <input type="radio" name="filter[location]" id="hybrid" value="hybrid" class="filters" onclick="check(filter)">
+      <br>
+      <label for="remote">Remote</label>
+      <input type="radio" name="filter[location]" id="remote" value="remote" class="filters" onclick="check(filter)">
+<br>
+<br>
+    </div>
+    <div class="duration">
+      <h5>Duration</h5>
+      <br>
+      <label for="1">1-2 months</label>
+      <input type="radio" name="filter[duration]" id="1" value="1" class="filters" onclick="check(filter)"> <br>
+      <label for="3">3-4 months</label>
+      <input type="radio" name="filter[duration]" id="3" value="3" class="filters" onclick="check(filter)"> <br>
+      <label for="4">4-6 months</label>
+      <input type="radio" name="filter[duration]" id="4" value="4" class="filters" onclick="check(filter)"> <br> 
+      <label for="1">>6 months</label>
+      <input type="radio" name="filter[duration]" id="6" value="6" class="filters" onclick="check(filter)"> <br> <br>
+    </div>
+
+    <div class="domain">
+      <br>
+      <select class="form-select" aria-label="Default select example" name="filter[domain]" onchange="check(filter)">
+        <option selected class="default.domain">Domain</option>
+        <option name="filter[domain]" value="Electrical" class="filter_options" >Electrical</option>
+        <option name="filter[domain]" value="ai" class="filter_options" >AI</option>
+        <option name="filter[domain]" value="sdk" class="filter_options" >SDK</option>
+      </select>
+      <br>
+    </div>
+   
+
+    </form>
+   </div>
+  <div class="body">
+    <form  role="search" method="post" action="/projects" >
+      
+        <div class="search_bar">
+          <input style="width: 15rem;" name="q" class="form-control nav_search me-2 searchbox " type="search" placeholder="Search_Projects" aria-label="Search">
+      <button class="btn btn-sm btn-outline-success search-btn " type="submit">Search</button>
+      <a href="/projects/new" type="button" class="new_project btn btn-outline-dark">Post New project</a>
+        </div>
+  </form>
+<% if(projects[0]){ %> 
+  <% for(project of projects){ %>
+      <div class='project_container'>
+        <br>
+          <div class="post_title">
+            <div class="project_name"><h3><%= project.projectName %></h3></div>
+            <div class="site"><%=project.job_location %></div>
+          </div>
+          <div class="post_info">
+            <div class="postedby"><h5>Posted By:</h5> <br /> <%=project.postedBy %></div>
+            <div class="req"><PersonIcon></PersonIcon><br /><%=project.requirements %></div>
+            <div class="button"> <Button>See Details</Button></div>
+          </div>
+        </div>
+        
+  <% } %>
+  <% }  else{ %>
+      <h4>No results found!!</h4>
+ <% } %>
+  </div>
+ </div>
+   
+</body>

@@ -1,4 +1,15 @@
-module.exports.data = [
+const mongoose=require("mongoose");
+const Project=require("./models/project");
+main()
+.then((res)=>{
+    console.log("connection with database formed successfully");
+})
+.catch(err => console.log(err));
+
+async function main() {
+  await mongoose.connect('mongodb://127.0.0.1:27017/project_portal');
+};
+const data = [
     {
       projectName: 'Murray-Raynor',
       postedBy: 'Lakin',
@@ -161,3 +172,5 @@ module.exports.data = [
     }
   ];
   
+
+Project.insertMany(data);

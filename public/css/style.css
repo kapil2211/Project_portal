@@ -87,6 +87,15 @@ h5{
   }
   .search-btn{
   
-    margin-bottom: 0.3rem;
+    margin-top: 0.3rem;
   }
-  
+  .new_project{
+margin-left: 6rem;
+    text-decoration: none;
+  }
+  .search_bar{
+    display:flex;
+    justify-content: end;
+    align-items: baseline;
+     
+  }
