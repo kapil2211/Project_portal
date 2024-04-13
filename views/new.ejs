@@ -4,7 +4,7 @@
 
        <div class="col-8 offset-2">
         <h3 style="margin-top: 2rem;">Post New Project</h3>
-        <form  style="margin-top: 2rem;" method="POST" action="/projects" novalidate class="needs-validation" enctype="multipart/form-data" >
+        <form  style="margin-top: 2rem;" method="POST" action="/projects" novalidate class="needs-validation" enctype="application/x-www-form-urlencoded"  >
            <div class="mb-3">
             <label class="form-label" for="projectName">Project Title</label>
             <input name="project[projectName]" placeholder="Enter Project Title" type="text" id="projectName" class="form-control" required>

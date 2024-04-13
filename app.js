@@ -7,6 +7,7 @@ const methodOverride = require('method-override');
 const mongodb=require("mongodb");
 const ExpressError=require("./ExpressError.js");
 const Project=require("./models/project");
+const multer  = require('multer')
 let port=8080;
 app.set("view engine","ejs");
 const path=require("path");
@@ -98,7 +99,11 @@ app.get("/projects",asyncWrap(async (req,res)=>{
 }));
 app.post("/projects",asyncWrap(async (req,res)=>{
  
-  console.log(req.body);
+ if(req.body.project){
+    const project=req.body.project;
+    const newProject=new Project(project);
+    await newProject.save();
+ }
    let filter;
 let projects= await Project.find();
 
