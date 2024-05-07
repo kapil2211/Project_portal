@@ -52,7 +52,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req,res,next)=>{
     res.locals.currUser=req.user;
    
-    next();
+   return next();
 });
 
 
