@@ -97,6 +97,9 @@ app.get("/projects",asyncWrap(async (req,res)=>{
     const projects=await Project.find();
     return res.render("projects.ejs",{projects});
 }));
+app.get("/projects/new",asyncWrap((req,res)=>{
+    return res.render("new.ejs");
+}))
 app.post("/projects",asyncWrap(async (req,res)=>{
  
  if(req.body.project){
@@ -164,15 +167,17 @@ let q="";
    return res.render("projects.ejs",{projects:projects,filters:filter})
    
 }))
-app.get("/projects/new",asyncWrap((req,res)=>{
-    return res.render("new.ejs");
+app.get("/projects/:id",asyncWrap(async(req,res)=>{
+    let {id}=req.params;
+    let project=await Project.findById(id);
+    return res.render("show.ejs",{project})
 }))
 app.get("/login",asyncWrap((req,res)=>{
-    res.render("users/login.ejs");
+   return res.render("users/login.ejs");
 }));
 
 app.post("/login",passport.authenticate("local",{failureRedirect:"/login",failureFlash:true}),(req,res)=>{
-    res.redirect("/home");
+  return  res.redirect("/home");
 });
 
 app.get("/logout",(req,res,next)=>{
@@ -180,16 +185,16 @@ app.get("/logout",(req,res,next)=>{
         if(err){
             return next(err);
         }
-        res.redirect("/home");
+      return  res.redirect("/home");
     });
 });
 app.all("*",(req,res,next)=>{
-    next(new ExpressError(404,"Page Not Found!"));
+   return next(new ExpressError(404,"Page Not Found!"));
    })
 
 app.use((err,req,res,next)=>{
     let {status=501,message="some error occured"}= err;
-    res.render("error.ejs",{message})
+   return res.render("error.ejs",{message})
     } );
 
 app.listen(port,()=>{

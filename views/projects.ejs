@@ -71,7 +71,8 @@
           </div>
           <div class="post_info">
            
-            <div class="site"><p><i class="fa-solid fa-house"></i>&nbsp;&nbsp;&nbsp;<%=project.job_location %></p></div>
+            <div class="site"><p><i class="fa-solid fa-house"></i>&nbsp;&nbsp;&nbsp;<%=project.job_location.charAt(0).toUpperCase()
+              + project.job_location.slice(1) %></p></div>
             <div class="date-info">
               <div>
                 <span class="grey-text" > <i class="fa-regular fa-circle-play"></i> <h6>START DATE</h6></span><br>
@@ -84,15 +85,21 @@
               <div>
                 <span class="grey-text"><i class="fa-regular fa-calendar"></i> <h6>DURATION</h6></span><br>
                 <%=project.duration %>
+              
               </div>
               <div>
                 <span class="grey-text"><h6>DOMAIN</h6></span><br>
-                <%=project.domain %>
+                <%=project.domain.charAt(0).toUpperCase()
+                + project.domain.slice(1) %>
               </div>
             </div>
           </div>
           <hr>
-          <div class="button"> <Button class="btn btn-outline-dark">See Details</Button></div>
+          <div class="button">
+            <form action="projects/<%=project._id%>" method="get" >
+            <Button class="btn btn-outline-dark">See Details</Button>
+            </form>
+          </div>
         </div>
         
   <% } %>
@@ -101,5 +108,5 @@
  <% } %>
   </div>
  </div>
-   
+
 </body>

@@ -25,6 +25,10 @@ const projectSchema=new Schema({
         type:String,
         required:true,
     },
+    description:{
+        type:String,
+        required:true,
+    }
 })
 
 const Project=mongoose.model("project",projectSchema);
