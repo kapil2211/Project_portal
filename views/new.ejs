@@ -31,13 +31,13 @@
         <h5>Job Location</h5>
         
         <label for="onsite">On-Site</label>
-        <input type="radio" name="project[location]" id="onsite" value="on-site" class="filters" required>
+        <input type="radio" name="project[job_location]" id="onsite" value="on-site" class="filters" required>
         <br>
         <label for="hybrid">Hybrid</label>
-        <input type="radio" name="project[location]" id="hybrid" value="hybrid" class="filters" required>
+        <input type="radio" name="project[job_location]" id="hybrid" value="hybrid" class="filters" required>
         <br>
         <label for="remote">Remote</label>
-        <input type="radio" name="project[location]" id="remote" value="remote" class="filters" required>
+        <input type="radio" name="project[job_location]" id="remote" value="remote" class="filters" required>
   <br>
     </div>
     <div class="mb-3">
@@ -49,6 +49,12 @@
     <div class="mb-3">
         <label class="form-label" for="description">Description</label>
         <textarea name="project[description]" placeholder="Enter description of Project" type="text" id="description" class="form-control" required></textarea>
+        <div class="valid-feedback">looks good!</div>
+        <div class="invalid-feedback">Please enter a valid input</div>   
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="projectName">Add Skills Required</label>
+        <input name="skills" placeholder="Enter Skills (Seperate them with ',')" type="text" id="skill" class="form-control" required>
         <div class="valid-feedback">looks good!</div>
         <div class="invalid-feedback">Please enter a valid input</div>   
     </div>

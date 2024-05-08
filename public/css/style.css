@@ -6,7 +6,7 @@ body{
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   
 }
 .container{
@@ -32,6 +32,7 @@ body{
     border: 2px solid rgba(0, 0, 0, 0.084);
 }
 .post_title{
+  text-align: center;
   margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
@@ -49,6 +50,7 @@ body{
     margin-left: auto;
 } */
 .post_info{
+  text-align: center;
   padding-left: 1.2rem;
     display: flex;
     flex-direction: column;
@@ -141,6 +143,62 @@ margin-left: 6rem;
     margin-right: 2rem;
     margin-bottom: 1rem;
   }
+
+
+.show-container{
+  width: fit-content;
+  margin:2rem auto;
+}
+.description{
+  text-align: center;
+}
+.skill-box{
+  width: 80%;
+}
+.skill-box ul{
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+  border: 1px solid #a6a6a6;
+  border-radius: 0.5rem;
+  margin: 12px 0;
+}
+.skill-box ul li{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  background: #f2f2f2;
+  padding: 5px 8px 5px 10px;
+  margin:4px 3px;
+  border: 1px solid #e3d1e1;
+}
+.skill-box ul li i{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20px;
+  width: 20px;
+  font-size: 12px;
+  border-radius: 50%;
+  margin-left: 3px;
+  cursor: pointer;
+  background: #dfdfdf;
+}
+.skill-box ul input{
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 5px;
+  flex: 1;
+}
+.skill-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+}
   @media only screen and (max-width: 868px) {
     .main-container {
         padding: 0.5rem; /* Adjusted padding */

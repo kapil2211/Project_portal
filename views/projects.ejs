@@ -3,7 +3,7 @@
  <div class="main-container">
    <div class="filter">
     <div class="form">
-      <form class="filter-form" method="post" action="/projects" >
+      <form class="filter-form" method="get" action="/projects" >
         <div class="heading">
           <h3 style="display: inline-block; margin-right: 1.5rem;">FILTERS</h3>
       <button class="btn btn-sm btn-outline-dark " style="margin-bottom: 0.3rem;text-align: center;font-size: x-small;">Apply</button>
@@ -53,7 +53,7 @@
     </div>
    </div>
   <div class="body">
-    <form  role="search" method="post" action="/projects" >
+    <form  role="search" method="get" action="/projects" >
       
         <div class="search_bar">
           <div><input style="width: 15rem;" name="q" class="form-control nav_search me-2 searchbox " type="search" placeholder="Search_Projects" aria-label="Search">
@@ -104,7 +104,10 @@
         
   <% } %>
   <% }  else{ %>
+    <div class="project_container">
       <h4>No results found!!</h4>
+    </div>
+      
  <% } %>
   </div>
  </div>

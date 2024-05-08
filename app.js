@@ -8,6 +8,7 @@ const mongodb=require("mongodb");
 const ExpressError=require("./ExpressError.js");
 const Project=require("./models/project");
 const multer  = require('multer')
+const {projectSchema}=require("./Schema.js");
 let port=8080;
 app.set("view engine","ejs");
 const path=require("path");
@@ -88,84 +89,98 @@ app.get("/home",asyncWrap(async (req,res)=>{
     const projects=await Project.find();
     return res.render("projects.ejs",{projects});
 }));
-app.post("home",asyncWrap(async (req,res)=>{
-    console.log(req.body);
-    const projects=await Project.find();
-    return res.render("projects.ejs",{projects});
-}));
-app.get("/projects",asyncWrap(async (req,res)=>{
-    const projects=await Project.find();
-    return res.render("projects.ejs",{projects});
-}));
+
+// app.get("/projects",asyncWrap(async (req,res)=>{
+//     const projects=await Project.find();
+//     return res.render("projects.ejs",{projects});
+// }));
 app.get("/projects/new",asyncWrap((req,res)=>{
     return res.render("new.ejs");
 }))
-app.post("/projects",asyncWrap(async (req,res)=>{
- 
- if(req.body.project){
-    const project=req.body.project;
-    const newProject=new Project(project);
-    await newProject.save();
- }
-   let filter;
-let projects= await Project.find();
-
-let q="";
-   if((req.body.q)&&(req.body.q!="")){
-    
-     q=req.body.q;
-     projects= projects.filter((project) => (
-        project.projectName.toLowerCase().includes(q.toLowerCase())
-    ))
-
-   }
-   if(req.body.filter){
-    
-     filter=req.body.filter;
+app.get("/projects",asyncWrap(async (req,res)=>{
   
-    if(filter.location){
-       let  filtered_location= projects.filter((project) => (
-            project.job_location.includes(filter.location)
-        ))
+    if(req.query.project){
+        const project=req.body.project;
+        const newProject=new Project(project);
+        await newProject.save();
+     }
+       let filter;
+    let projects= await Project.find();
+    
+    let q="";
+       if((req.query.q)&&(req.query.q!="")){
         
-        projects=filtered_location;
-    }
-    if(filter.domain){
-        let  filtered_domain= projects.filter((project) => (
-            project.domain.includes(filter.domain)
+         q=req.query.q;
+         projects= projects.filter((project) => (
+            project.projectName.toLowerCase().includes(q.toLowerCase())
         ))
-        projects=filtered_domain;
-    }if(filter.duration){
-        if(filter.duration==1){
-           let  filtered_duration= projects.filter((project) => (
-                (project.duration==1)||(project.duration==2)
-            ))
-            projects=filtered_duration;
-        }
-       else if(filter.duration==3){
-       let filtered_duration= projects.filter((project) => (
-                (project.duration>2)&&(project.duration<5)
-            ))
-            projects=filtered_duration;
-        }
-       else if(filter.duration==4){
-        let filtered_duration= projects.filter((project) => (
-                (project.duration>3)&&(project.duration<7)
-            ))
-            projects=filtered_duration;
-        }
-        else{
-            let filtered_duration= projects.filter((project) => (
-                (project.duration>6)
-            ))
-            projects=filtered_duration;
-        }
+    
+       }
+       if(req.query.filter){
+        
+         filter=req.query.filter;
       
-    }
-   
-   }
+        if(filter.location){
+           let  filtered_location= projects.filter((project) => (
+                project.job_location.includes(filter.location)
+            ))
+            
+            projects=filtered_location;
+        }
+        if(filter.domain){
+            let  filtered_domain= projects.filter((project) => (
+                project.domain.includes(filter.domain)
+            ))
+            projects=filtered_domain;
+        }if(filter.duration){
+            if(filter.duration==1){
+               let  filtered_duration= projects.filter((project) => (
+                    (project.duration==1)||(project.duration==2)
+                ))
+                projects=filtered_duration;
+            }
+           else if(filter.duration==3){
+           let filtered_duration= projects.filter((project) => (
+                    (project.duration>2)&&(project.duration<5)
+                ))
+                projects=filtered_duration;
+            }
+           else if(filter.duration==4){
+            let filtered_duration= projects.filter((project) => (
+                    (project.duration>3)&&(project.duration<7)
+                ))
+                projects=filtered_duration;
+            }
+            else{
+                let filtered_duration= projects.filter((project) => (
+                    (project.duration>6)
+                ))
+                projects=filtered_duration;
+            }
+          
+        }
+       
+       }
+     
    return res.render("projects.ejs",{projects:projects,filters:filter})
    
+}))
+app.post("/projects",asyncWrap(async(req,res)=>{
+   let {project,skills}=req.body;
+   project.skills=[];
+    skills.split(',').forEach(skills=>{
+        project.skills.push(skills);
+       })
+project.postedBy="Admin";
+    let result=projectSchema.validate(project);   
+    if(result.error){
+   
+        throw new ExpressError(400,result.error);
+
+    }
+    let newproject=new Project(project);
+    await newproject.save();
+   res.redirect("/projects");
 }))
 app.get("/projects/:id",asyncWrap(async(req,res)=>{
     let {id}=req.params;

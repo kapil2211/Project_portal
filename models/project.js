@@ -28,7 +28,10 @@ const projectSchema=new Schema({
     description:{
         type:String,
         required:true,
-    }
+    },
+    skills:[
+    {type:String}
+    ],
 })
 
 const Project=mongoose.model("project",projectSchema);
