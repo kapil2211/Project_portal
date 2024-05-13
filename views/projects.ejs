@@ -14,13 +14,13 @@
         <h5>Job Location</h5>
         <br>
         <label for="onsite">On-Site</label>
-        <input type="radio" name="filter[location]" id="onsite" value="on-site" class="filters" onclick="check(filter)">
+        <input type="radio" name="filter[location]" id="onsite" value="on-site" class="filters"  >
         <br>
         <label for="hybrid">Hybrid</label>
-        <input type="radio" name="filter[location]" id="hybrid" value="hybrid" class="filters" onclick="check(filter)">
+        <input type="radio" name="filter[location]" id="hybrid" value="hybrid" class="filters"  >
         <br>
         <label for="remote">Remote</label>
-        <input type="radio" name="filter[location]" id="remote" value="remote" class="filters" onclick="check(filter)">
+        <input type="radio" name="filter[location]" id="remote" value="remote" class="filters"  >
   <br>
   <br>
       </div>
@@ -28,13 +28,13 @@
         <h5>Duration</h5>
         <br>
         <label for="1">1-2 months</label>
-        <input type="radio" name="filter[duration]" id="1" value="1" class="filters" onclick="check(filter)"> <br>
+        <input type="radio" name="filter[duration]" id="1" value="1" class="filters"  > <br>
         <label for="3">3-4 months</label>
-        <input type="radio" name="filter[duration]" id="3" value="3" class="filters" onclick="check(filter)"> <br>
+        <input type="radio" name="filter[duration]" id="3" value="3" class="filters"  > <br>
         <label for="4">4-6 months</label>
-        <input type="radio" name="filter[duration]" id="4" value="4" class="filters" onclick="check(filter)"> <br> 
+        <input type="radio" name="filter[duration]" id="4" value="4" class="filters"  > <br> 
         <label for="1">>6 months</label>
-        <input type="radio" name="filter[duration]" id="6" value="6" class="filters" onclick="check(filter)"> <br> <br>
+        <input type="radio" name="filter[duration]" id="6" value="6" class="filters"  > <br> <br>
       </div>
   
       <div class="domain">
@@ -53,14 +53,23 @@
     </div>
    </div>
   <div class="body">
-    <form  role="search" method="get" action="/projects" >
+    <div class="search_bar">
       
-        <div class="search_bar">
-          <div><input style="width: 15rem;" name="q" class="form-control nav_search me-2 searchbox " type="search" placeholder="Search_Projects" aria-label="Search">
-            <button class="btn btn-sm btn-outline-success search-btn " type="submit">Search</button></div>
-     <div> <a href="/projects/new" type="button" class="new_project btn btn-outline-dark">Post New project</a></div>
+        <div>
+          <form style="display:inline-block;"  role="search" method="get" action="/projects" ></form>
+          <input style="width: 15rem;" name="q" class="form-control nav_search me-2 searchbox " type="search" placeholder="Search_Projects" aria-label="Search">
+          <button class="btn btn-sm btn-outline-success search-btn " type="submit">Search</button>
+        </form>
         </div>
-  </form>
+        <% if(currUser && currUser.auth!='btech'){%>
+          <div class="btn-box"> <a href="/projects/new" type="button"  class="new_project btn btn-outline-dark">Post New project</a></div>
+         <%}%>
+        
+    </div>
+    
+   
+  
+
 <% if(projects[0]){ %> 
   <% for(project of projects){ %>
       <div class='project_container'>
@@ -84,7 +93,7 @@
               </div>
               <div>
                 <span class="grey-text"><i class="fa-regular fa-calendar"></i> <h6>DURATION</h6></span><br>
-                <%=project.duration %>
+                <%=project.duration %> months
               
               </div>
               <div>

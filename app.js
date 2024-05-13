@@ -7,6 +7,7 @@ const methodOverride = require('method-override');
 const mongodb=require("mongodb");
 const ExpressError=require("./ExpressError.js");
 const Project=require("./models/project");
+const flash=require("connect-flash");
 const multer  = require('multer')
 const {projectSchema}=require("./Schema.js");
 let port=8080;
@@ -42,7 +43,7 @@ const sessionOptions={
         };
     }
 app.use(session(sessionOptions));
-
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new localStrategy(User.authenticate()));
@@ -51,6 +52,9 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next)=>{
+    res.locals.suc=req.flash("suc");
+    res.locals.sucdel=req.flash("sucdel");
+    res.locals.err=req.flash("err");
     res.locals.currUser=req.user;
    
    return next();
@@ -68,23 +72,7 @@ async function main() {
 };
 
 
-app.get("/signup",(req,res)=>{
-   return res.render("users/signup.ejs");
-});
 
-app.post("/signup",asyncWrap,async(req,res)=>{
-   
-    let{username,email,password}=req.body;
-    const newUser=new User({email,username});
-    const registeredUser=await User.register(newUser,password);
-    req.login(registeredUser,(err)=>{
-        if(err){
-            return next(err);
-        }
-        return  res.redirect("/home");
-    });
-  
-});
 app.get("/home",asyncWrap(async (req,res)=>{
     const projects=await Project.find();
     return res.render("projects.ejs",{projects});
@@ -187,6 +175,24 @@ app.get("/projects/:id",asyncWrap(async(req,res)=>{
     let project=await Project.findById(id);
     return res.render("show.ejs",{project})
 }))
+app.get("/signup",(req,res)=>{
+    return res.render("users/signup.ejs");
+ });
+ 
+ app.post("/signup",asyncWrap(async(req,res)=>{
+    
+     let{username,email,password,auth}=req.body;
+     const newUser=new User({email,username,auth});
+     await User.register(newUser,password);
+     console.log(newUser);
+     req.login(newUser,(err)=>{
+         if(err){
+             return next(err);
+         }
+         return  res.redirect("/home");
+     });
+   
+ }));
 app.get("/login",asyncWrap((req,res)=>{
    return res.render("users/login.ejs");
 }));

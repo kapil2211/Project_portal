@@ -3,13 +3,12 @@ body{
 }
 /* PROJECTS_PAGE */
 .body{
-  width: 100%;
+  width: 100vw;
+}
+.container{
   display: flex;
   flex-direction: column;
   justify-content: start;
-  
-}
-.container{
   width:100vw;
     margin: 0;
     padding: 0;
@@ -97,26 +96,35 @@ h5{
     align-items: center;
     
   }
+
+  .search_bar{
+ padding-right: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content:right;
+    align-items: center;
+    margin:1rem auto;
+    flex-wrap: wrap;
+  }
   .searchbox{
     margin-top: 1rem;
     display:inline-block;
   }
-  .search-btn{
-  
-    margin-top: 0.3rem;
+ 
+  .btn-box{
+    height: 3.35rem;
+    display: flex;
+    flex-direction:row;
+    justify-content: baseline;
+    align-items: baseline;
   }
   .new_project{
 margin-left: 6rem;
     text-decoration: none;
+    margin-bottom: 0;
+    margin-top: auto;
   }
-  .search_bar{
-    display:flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: end;
-    align-items: baseline;
-     
-  }
+ 
   .new_project{
     width: 9rem;
     height: 2.5rem;
@@ -198,6 +206,25 @@ margin-left: 6rem;
   justify-content: center;
   flex-wrap: wrap;
   align-items: center;
+}
+
+.skill{
+  list-style: none;
+  background-color: #8a8a8a3f;
+  border-radius: 2.5rem;
+  width: 5rem;
+  margin: 1rem auto;
+}
+.show-body{
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: start;
+  flex-wrap: wrap;
+}
+.showbtns{
+  height: fit-content;
+  width: fit-content;
 }
   @media only screen and (max-width: 868px) {
     .main-container {
