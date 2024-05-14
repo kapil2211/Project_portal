@@ -193,7 +193,8 @@ project.postedBy=req.user.username;
 }))
 app.get("/projects/:id",asyncWrap(async(req,res)=>{
     let {id}=req.params;
-    let project=await Project.findById(id);
+    let project=await Project.findById(id).populate("owner");
+    
     return res.render("show.ejs",{project})
 }))
 app.get("/projects/:id/edit",saveRedirectUrl,isLoggedIn,check_auth,asyncWrap(async(req,res)=>{
@@ -241,19 +242,22 @@ app.get("/signup",(req,res)=>{
  });
  
  app.post("/signup",asyncWrap(async(req,res)=>{
-    
+    try{
      let{username,email,password,auth}=req.body;
      const newUser=new User({email,username,auth});
      await User.register(newUser,password);
-     console.log(newUser);
-     req.login(newUser,(err)=>{
-         if(err){
-             return next(err);
-         }
-         req.flash("suc",`Welcome ${req.user.username}!`);
-         return  res.redirect("/home");
-     });
-   
+     
+     req.login(newUser, (err) => {
+        if(err) {
+            return next(err);
+        }
+        req.flash("success", "Welcome to Wanderlust!");
+        res.redirect("/listings");
+    });
+    }catch(e){
+        req.flash("err",e.message);
+        res.redirect("/signup");
+    }
  }));
 app.get("/login",asyncWrap((req,res)=>{
    return res.render("users/login.ejs");

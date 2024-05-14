@@ -154,7 +154,8 @@ margin-left: 6rem;
 
 
 .show-container{
-  width: fit-content;
+  padding:0 15%;
+width: 100%;
   margin:2rem auto;
 }
 .description{
@@ -217,7 +218,7 @@ margin-left: 6rem;
 }
 .show-body{
   display:flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: start;
   flex-wrap: wrap;
