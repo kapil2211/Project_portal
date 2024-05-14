@@ -55,9 +55,11 @@
    <% if(currUser && currUser.auth!='btech'){%>
     <div class="show-btns">
       <br> <br> <br>
-      <a type="button" class="btn btn-outline-dark">Edit</a>
+      <a type="button" class="btn btn-outline-dark" href="/projects/<%=project._id%>/edit">Edit</a>
       &nbsp;&nbsp;
-      <a type="button" class="btn btn-outline-dark">Delete</a>
+      <form style="display: inline-block; margin: 0;" method="post" action="/projects/<%=project._id%>/delete/?_method=DELETE">
+      <button class="btn btn-outline-dark" >Delete</button>
+    </form>
      </div>
    <%}%>
 </div>

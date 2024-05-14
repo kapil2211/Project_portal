@@ -71,18 +71,34 @@ async function main() {
   await mongoose.connect('mongodb://127.0.0.1:27017/project_portal');
 };
 
-
+const isLoggedIn = (req, res, next) => {
+	if (!req.isAuthenticated()) {
+		req.session.redirectUrl = req.originalUrl;
+		req.flash("err", "you must be logged !");
+		return res.redirect("/login");
+	}
+	return next();
+};
+const saveRedirectUrl=(req,res,next)=>{
+	if(req.session.redirectUrl){
+		res.locals.redirectUrl=req.session.redirectUrl;
+	}
+	return next();
+}
+const check_auth=(req,res,next)=>{
+    if(req.user.auth=='btech'){
+        throw new ExpressError(401,"You are not authorized to access this page!")
+    }
+    else next();
+}
 
 app.get("/home",asyncWrap(async (req,res)=>{
     const projects=await Project.find();
     return res.render("projects.ejs",{projects});
 }));
 
-// app.get("/projects",asyncWrap(async (req,res)=>{
-//     const projects=await Project.find();
-//     return res.render("projects.ejs",{projects});
-// }));
-app.get("/projects/new",asyncWrap((req,res)=>{
+
+app.get("/projects/new",saveRedirectUrl,isLoggedIn,check_auth,asyncWrap((req,res)=>{
     return res.render("new.ejs");
 }))
 app.get("/projects",asyncWrap(async (req,res)=>{
@@ -153,21 +169,26 @@ app.get("/projects",asyncWrap(async (req,res)=>{
    return res.render("projects.ejs",{projects:projects,filters:filter})
    
 }))
-app.post("/projects",asyncWrap(async(req,res)=>{
+app.post("/projects",saveRedirectUrl,isLoggedIn,check_auth,asyncWrap(async(req,res)=>{
    let {project,skills}=req.body;
    project.skills=[];
     skills.split(',').forEach(skills=>{
         project.skills.push(skills);
        })
-project.postedBy="Admin";
+project.postedBy=req.user.username;
+
     let result=projectSchema.validate(project);   
     if(result.error){
    
         throw new ExpressError(400,result.error);
 
     }
+
     let newproject=new Project(project);
+    project.owner=req.user._id;
+
     await newproject.save();
+    req.flash("suc","Listing created successfully!");
    res.redirect("/projects");
 }))
 app.get("/projects/:id",asyncWrap(async(req,res)=>{
@@ -175,6 +196,46 @@ app.get("/projects/:id",asyncWrap(async(req,res)=>{
     let project=await Project.findById(id);
     return res.render("show.ejs",{project})
 }))
+app.get("/projects/:id/edit",saveRedirectUrl,isLoggedIn,check_auth,asyncWrap(async(req,res)=>{
+    let {id}=req.params;
+
+    let project=await Project.findById(id);
+    return res.render("edit.ejs",{project})
+}))
+app.post("/projects/:id/edit",saveRedirectUrl,isLoggedIn,check_auth,asyncWrap(async (req,res,next)=>{
+      
+    const {id} =req.params;
+    const {project,skills}=req.body;
+    
+ project.skills=[];
+    skills.split(',').forEach(skills=>{
+        project.skills.push(skills);
+       })
+
+     
+
+    let editlist=await Project.findByIdAndUpdate(id,{...project});
+  project.postedBy=editlist.postedBy;
+   let result=projectSchema.validate(project); 
+   
+if(result.error){
+    throw new ExpressError(400,result.error);
+}
+   await editlist.save();
+    req.flash("sucdel","Listing updated successfully!");
+    res.redirect("/projects");
+
+
+}
+))
+app.delete("/projects/:id/delete/",saveRedirectUrl,isLoggedIn,check_auth,asyncWrap(async(req,res)=>{
+    let {id}=req.params;
+    await Project.findByIdAndDelete(id);
+    req.flash("err","Listing deleted successfully!");
+    res.redirect("/projects");
+
+}))
+
 app.get("/signup",(req,res)=>{
     return res.render("users/signup.ejs");
  });
@@ -189,6 +250,7 @@ app.get("/signup",(req,res)=>{
          if(err){
              return next(err);
          }
+         req.flash("suc",`Welcome ${req.user.username}!`);
          return  res.redirect("/home");
      });
    
@@ -197,15 +259,18 @@ app.get("/login",asyncWrap((req,res)=>{
    return res.render("users/login.ejs");
 }));
 
-app.post("/login",passport.authenticate("local",{failureRedirect:"/login",failureFlash:true}),(req,res)=>{
-  return  res.redirect("/home");
-});
+app.post("/login",passport.authenticate("local",{failureRedirect:"/login",failureFlash:true}),saveRedirectUrl,asyncWrap((req,res)=>{
+    req.flash("suc",`Welcome back ${req.user.username}`);
+    let redirectUrl=res.locals.redirectUrl || "/projects"
+    res.redirect(redirectUrl);
+}));
 
 app.get("/logout",(req,res,next)=>{
     req.logout((err)=>{
         if(err){
             return next(err);
         }
+        req.flash("sucdel", "You are logged out!");
       return  res.redirect("/home");
     });
 });
