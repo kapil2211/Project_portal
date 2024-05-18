@@ -25,6 +25,17 @@ const projectSchema=new Schema({
         type:String,
         required:true,
     },
+    description:{
+        type:String,
+        required:true,
+    },
+    skills:[
+    {type:String}
+    ],
+    owner:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
+    },
 })
 
 const Project=mongoose.model("project",projectSchema);

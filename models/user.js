@@ -6,6 +6,11 @@ const userSchema=new Schema({
     email:{
         type:String,
         required :true
+    },
+    auth:{
+        type:String,
+        required :true,
+        enum: ['admin', 'btech','mtech','phd'],
     }
 });
 
