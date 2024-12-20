@@ -1,0 +1,65 @@
+<% layout("/layouts/boilerplate.ejs") %>
+<body>
+    <div class="row">
+
+       <div class="col-8 offset-2">
+        <h3 style="margin-top: 2rem;">Post New Project</h3>
+        <form  style="margin-top: 2rem;" method="POST" action="/projects" novalidate class="needs-validation" enctype="application/x-www-form-urlencoded"  >
+           <div class="mb-3">
+            <label class="form-label" for="projectName">Project Title</label>
+            <input name="project[projectName]" placeholder="Enter Project Title" type="text" id="projectName" class="form-control" required>
+            <div class="valid-feedback">looks good!</div>
+            <div class="invalid-feedback">Please enter a valid input</div>   
+        </div>
+    <div class="mb-3">
+        
+        <label class="form-label" for="requirements">Interns Required</label>
+        <input required name="project[requirements]" placeholder="Vacancies Available" type="number" id="requirements" class="form-control">
+        <div class="valid-feedback">looks good!</div>
+        <div class="invalid-feedback">Please enter a valid input</div>
+    </div>
+           
+    <div class="mb-3">
+        
+        <label class="form-label" for="duration">Duration of Job</label>
+        <input required name="project[duration]" placeholder="Duration(in months)" type="number" id="duration" class="form-control">
+        <div class="valid-feedback">looks good!</div>
+        <div class="invalid-feedback">Please enter a valid input</div>
+    </div>
+          
+    <div class="mb-3">
+        <h5>Job Location</h5>
+        <br>
+        <label for="onsite">On-Site</label>
+        <input type="radio" name="project[job_location]" id="onsite" value="on-site" class="filters" required>
+        <br>
+        <label for="hybrid">Hybrid</label>
+        <input type="radio" name="project[job_location]" id="hybrid" value="hybrid" class="filters" required>
+        <br>
+        <label for="remote">Remote</label>
+        <input type="radio" name="project[job_location]" id="remote" value="remote" class="filters" required>
+  <br>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="domain">Domain</label>
+        <input name="project[domain]" placeholder="Enter Domain of Project" type="text" id="domain" class="form-control" required>
+        <div class="valid-feedback">looks good!</div>
+        <div class="invalid-feedback">Please enter a valid input</div>   
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="description">Description</label>
+        <textarea name="project[description]" placeholder="Enter description of Project" type="text" id="description" class="form-control" required></textarea>
+        <div class="valid-feedback">looks good!</div>
+        <div class="invalid-feedback">Please enter a valid input</div>   
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="projectName">Add Skills Required</label>
+        <input name="skills" placeholder="Enter Skills (Seperate them with ',')" type="text" id="skill" class="form-control" required>
+        <div class="valid-feedback">looks good!</div>
+        <div class="invalid-feedback">Please enter a valid input</div>   
+    </div>
+            <button style="width:8rem;" type="submit" class="btn btn-md btn-outline-success "> Add</button>
+        </form>
+       </div>
+    </div> 
+</body>

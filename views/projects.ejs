@@ -1,0 +1,124 @@
+<%- layout("/layouts/boilerplate") %>
+<body>
+ <div class="main-container">
+   <div class="filter">
+    <div class="form">
+      <form class="filter-form" method="get" action="/projects" >
+        <div class="heading">
+          <h3 style="display: inline-block; margin-right: 1.5rem;">FILTERS</h3>
+      <button class="btn btn-sm btn-outline-dark " style="margin-bottom: 0.3rem;text-align: center;font-size: x-small;">Apply</button>
+      
+        </div>
+      <br>
+      <div class="location">
+        <h5>Job Location</h5>
+        <br>
+        <label for="onsite">On-Site</label>
+        <input type="radio" name="filter[location]" id="onsite" value="on-site" class="filters"  >
+        <br>
+        <label for="hybrid">Hybrid</label>
+        <input type="radio" name="filter[location]" id="hybrid" value="hybrid" class="filters"  >
+        <br>
+        <label for="remote">Remote</label>
+        <input type="radio" name="filter[location]" id="remote" value="remote" class="filters"  >
+  <br>
+  <br>
+      </div>
+      <div class="duration">
+        <h5>Duration</h5>
+        <br>
+        <label for="1">1-2 months</label>
+        <input type="radio" name="filter[duration]" id="1" value="1" class="filters"  > <br>
+        <label for="3">3-4 months</label>
+        <input type="radio" name="filter[duration]" id="3" value="3" class="filters"  > <br>
+        <label for="4">4-6 months</label>
+        <input type="radio" name="filter[duration]" id="4" value="4" class="filters"  > <br> 
+        <label for="1">>6 months</label>
+        <input type="radio" name="filter[duration]" id="6" value="6" class="filters"  > <br> <br>
+      </div>
+  
+      <div class="domain">
+        <br>
+        <select class="form-select" aria-label="Default select example" name="filter[domain]" onchange="check(filter)">
+          <option selected class="default.domain">Domain</option>
+          <option name="filter[domain]" value="Electrical" class="filter_options" >Electrical</option>
+          <option name="filter[domain]" value="ai" class="filter_options" >AI</option>
+          <option name="filter[domain]" value="sdk" class="filter_options" >SDK</option>
+        </select>
+        <br>
+      </div>
+     
+  
+      </form>
+    </div>
+   </div>
+  <div class="body">
+    <div class="search_bar">
+      
+        <div>
+          <form style="display:inline-block;"  role="search" method="get" action="/projects" ></form>
+          <input style="width: 15rem;" name="q" class="form-control nav_search me-2 searchbox " type="search" placeholder="Search_Projects" aria-label="Search">
+          <button class="btn btn-sm btn-outline-success search-btn " type="submit">Search</button>
+        </form>
+        </div>
+        <% if(currUser && currUser.auth!='btech'){%>
+          <div class="btn-box"> <a href="/projects/new" type="button"  class="new_project btn btn-outline-dark">Post New project</a></div>
+         <%}%>
+        
+    </div>
+    
+   
+  
+
+<% if(projects[0]){ %> 
+  <% for(project of projects){ %>
+      <div class='project_container'>
+        <br>
+          <div class="post_title">
+            <div class="project_name"><h3 style="margin-bottom: 0.3rem;"><%= project.projectName %></h3></div>
+            <div class="postedby"><h5>Posted By:</h5> &nbsp; &nbsp; <%=project.postedBy %></div>
+          </div>
+          <div class="post_info">
+           
+            <div class="site"><p><i class="fa-solid fa-house"></i>&nbsp;&nbsp;&nbsp;<%=project.job_location.charAt(0).toUpperCase()
+              + project.job_location.slice(1) %></p></div>
+            <div class="date-info">
+              <div>
+                <span class="grey-text" > <i class="fa-regular fa-circle-play"></i> <h6>START DATE</h6></span><br>
+               Immediately
+              </div>
+              <div>
+                <span class="grey-text"><i class="fa-solid fa-user"></i> <h6>VACANCIES AVAILABLE</h6></span><br>
+                <%=project.requirements %>
+              </div>
+              <div>
+                <span class="grey-text"><i class="fa-regular fa-calendar"></i> <h6>DURATION</h6></span><br>
+                <%=project.duration %> months
+              
+              </div>
+              <div>
+                <span class="grey-text"><h6>DOMAIN</h6></span><br>
+                <%=project.domain.charAt(0).toUpperCase()
+                + project.domain.slice(1) %>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="button">
+            <form action="projects/<%=project._id%>" method="get" >
+            <Button class="btn btn-outline-dark">See Details</Button>
+            </form>
+          </div>
+        </div>
+        
+  <% } %>
+  <% }  else{ %>
+    <div class="project_container">
+      <h4>No results found!!</h4>
+    </div>
+      
+ <% } %>
+  </div>
+ </div>
+
+</body>

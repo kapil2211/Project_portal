@@ -1,0 +1,41 @@
+<%- layout("/layouts/boilerplate") %>
+<body>        
+    <div class="row mt-6" style="height: 100vh;">
+        <div class="col-6 offset-3">
+            
+    <form action="/signup" method="post" class="needs-validation" novalidate>
+        <h2>SignUp</h2>
+    <br> <br>
+        <div class="mb-3 col">
+            <label for="username" class="form-label">Username</label>
+            <input name="username" id="username" type="text" placeholder="Enter a unique username here" class="form-control" required>
+        </div>
+
+        <div class="mb-3 col">
+            <label for="email" class="form-label">Email ID</label>
+            <input name="email" id="email" type="email" placeholder="Enter your email here" class="form-control" required>
+        </div>
+        
+        <div class="mb-3 col">
+            <label for="password" class="form-label" >Password</label>
+            <input name="password" id="password" type="password" placeholder="Enter a strong password" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <h5>Class</h5>
+            <br>
+            <label for="onsite">B-tech</label>
+            <input type="radio" name="auth" id="onsite" value="btech" class="filters" required>
+            <br>
+            <label for="hybrid">M-tech</label>
+            <input type="radio" name="auth" id="hybrid" value="mtech" class="filters" required>
+            <br>
+            <label for="remote">Phd</label>
+            <input type="radio" name="auth" id="remote" value="phd" class="filters" required>
+      <br>
+      
+        </div>
+        <button class="btn btn-success">SignUp</button>
+    </form>
+    </div>
+    </div>
+</body>
