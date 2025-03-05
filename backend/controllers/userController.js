@@ -2,9 +2,7 @@ import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import ErrorHandler from "../middlewares/error.js";
 import { User } from "../models/userSchema.js";
 import { sendToken } from "../utils/jwtToken.js";
-// const Token = require("../models/tokenSchema");
-// const sendEmail = require("../utils/sendEmail.js");
-// const crypto = require("crypto");
+
 
 // Register user
 export const register = catchAsyncError(async (req, res, next) => {
@@ -32,21 +30,6 @@ export const register = catchAsyncError(async (req, res, next) => {
     role,
     password,
   });
-
-  // Generate a verification token and send email
-//   const token = await new Token({
-//     userId: user._id,
-//     token: crypto.randomBytes(32).toString("hex"),
-//   }).save();
-
-//   const url = `${process.env.BASEURL}users/${user._id}/verify/${token.token}`;
-//   await sendEmail(user.email, "Verify Email", url);
-
-//   res.status(201).json({
-//     success: true,
-//     message: "An email has been sent to verify your account.",
-//     user,
-//   });
 });
 
 // Login user
@@ -66,22 +49,6 @@ export const login = catchAsyncError(async (req, res, next) => {
   if (!isPasswordMatched) {
     return next(new ErrorHandler("Invalid password.", 400));
   }
-
-//   if (!user.verified) {
-//     let token = await Token.findOne({ userId: user._id });
-
-//     if (!token) {
-//       token = await new Token({
-//         userId: user._id,
-//         token: crypto.randomBytes(32).toString("hex"),
-//       }).save();
-
-//       const url = `${process.env.BASEURL}users/${user._id}/verify/${token.token}`;
-//       await sendEmail(user.email, "Verify Email", url);
-//     }
-
-//     return res.status(201).send({ message: "An email has been sent to your account for verification." });
-//   }
 
   if (user.role !== role) {
     return next(new ErrorHandler("Invalid role.", 404));
